@@ -4,25 +4,40 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/alisafaa12/my_project.git'
+                bat 'git clone https://github.com/alisafaa12/my_project.git'
             }
         }
+
         stage('Build') {
             steps {
-                sh 'echo "Building the application"'
-                sh 'mvn clean install'  // Change based on your build tool
+                bat '''
+                echo "Building the application"
+                npm install
+                '''
+                // If using Java, replace npm with Maven:
+                // bat 'mvn clean install'
             }
         }
+
         stage('Test') {
             steps {
-                sh 'echo "Running tests"'
-                sh 'mvn test'  // Change based on your test framework
+                bat '''
+                echo "Running tests"
+                npm test
+                '''
+                // For Java:
+                // bat 'mvn test'
             }
         }
+
         stage('Deploy') {
             steps {
-                sh 'echo "Deploying Application"'
-                sh 'scp -r target/*.jar user@server:/deployments/'  // Adjust for your server
+                bat '''
+                echo "Deploying application..."
+                echo "Deploy process simulated"
+                '''
+                // If deploying to a remote server, you can use SCP:
+                // bat 'scp -r build/* user@server:/deployments/'
             }
         }
     }
