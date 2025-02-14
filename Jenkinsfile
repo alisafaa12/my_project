@@ -11,18 +11,19 @@ pipeline {
         stage('Build') {
             steps {
                 bat '''
-                echo "Building the application"
-                npm install
+                echo == Starting Build ==
+                dir  // Lists files in the workspace
                 '''
                 // If using Java, replace npm with Maven:
                 // bat 'mvn clean install'
+                echo == Build Completed! ==
             }
         }
 
         stage('Test') {
             steps {
                 bat '''
-                echo "Running tests"
+                echo == Running Tests ==
                 npm test
                 '''
                 // For Java:
@@ -35,6 +36,8 @@ pipeline {
                 bat '''
                 echo "Deploying application..."
                 echo "Deploy process simulated"
+                xcopy /E /I /Y build\* "C:\\Deployments\\MyApp"
+                echo == Deployment Complete! ==
                 '''
                 // If deploying to a remote server, you can use SCP:
                 // bat 'scp -r build/* user@server:/deployments/'
