@@ -3,7 +3,7 @@ pipeline {
         label 'DevWin'  // Ensure this runs on a Windows node
     }
 
-    stages {
+   stages {
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: 'https://github.com/alisafaa12/my_project.git'
@@ -14,8 +14,15 @@ pipeline {
             steps {
                 bat '''
                 echo "== Starting Build =="
-                dir  // Lists files in the workspace
-                npm install  // Install dependencies
+                cd "%WORKSPACE%"
+                dir
+                if exist package.json (
+                    echo "package.json found, proceeding with npm install..."
+                    npm install
+                ) else (
+                    echo "Error: package.json not found!"
+                    exit /b 1
+                )
                 echo "== Build Completed! =="
                 '''
             }
@@ -25,7 +32,8 @@ pipeline {
             steps {
                 bat '''
                 echo "== Running Tests =="
-                npm test  // Replace with Maven if needed: mvn test
+                cd "%WORKSPACE%"
+                npm test
                 echo "== Tests Completed! =="
                 '''
             }
@@ -35,6 +43,7 @@ pipeline {
             steps {
                 bat '''
                 echo "== Deploying Application =="
+                cd "%WORKSPACE%"
                 xcopy /E /I /Y build\\* "C:\\Deployments\\MyApp"
                 echo "== Deployment Complete! =="
                 '''
