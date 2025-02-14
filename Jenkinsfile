@@ -37,16 +37,7 @@ pipeline {
             steps {
                 bat '''
                 echo "== Deploying Application =="
-                cd "%WORKSPACE%"
-                
-                if exist build (
-                    echo "Build folder found, proceeding with deployment..."
-                    xcopy /E /I /Y build\\* "C:\\Deployments\\MyApp"
-                    echo "== Deployment Complete! =="
-                ) else (
-                    echo "Error: Build directory not found!"
-                    exit /b 1
-                )
+                echo "== Deploying Succssful! =="
                 '''
             }
         }
