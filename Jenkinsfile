@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'windows'  // Ensure this runs on a Windows node
+        label 'DevWin'  // Ensure this runs on a Windows node
     }
 
     stages {
