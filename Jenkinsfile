@@ -1,46 +1,43 @@
 pipeline {
-    agent any
+    agent {
+        label 'windows'  // Ensure this runs on a Windows node
+    }
 
     stages {
         stage('Clone Repository') {
             steps {
-                bat 'git clone https://github.com/alisafaa12/my_project.git'
+                git branch: 'main', url: 'https://github.com/alisafaa12/my_project.git'
             }
         }
 
         stage('Build') {
             steps {
                 bat '''
-                echo == Starting Build ==
+                echo "== Starting Build =="
                 dir  // Lists files in the workspace
+                npm install  // Install dependencies
+                echo "== Build Completed! =="
                 '''
-                // If using Java, replace npm with Maven:
-                // bat 'mvn clean install'
-                echo == Build Completed! ==
             }
         }
 
         stage('Test') {
             steps {
                 bat '''
-                echo == Running Tests ==
-                npm test
+                echo "== Running Tests =="
+                npm test  // Replace with Maven if needed: mvn test
+                echo "== Tests Completed! =="
                 '''
-                // For Java:
-                // bat 'mvn test'
             }
         }
 
         stage('Deploy') {
             steps {
                 bat '''
-                echo "Deploying application..."
-                echo "Deploy process simulated"
-                xcopy /E /I /Y build\* "C:\\Deployments\\MyApp"
-                echo == Deployment Complete! ==
+                echo "== Deploying Application =="
+                xcopy /E /I /Y build\\* "C:\\Deployments\\MyApp"
+                echo "== Deployment Complete! =="
                 '''
-                // If deploying to a remote server, you can use SCP:
-                // bat 'scp -r build/* user@server:/deployments/'
             }
         }
     }
