@@ -1,9 +1,9 @@
 pipeline {
     agent {
-        label 'DevWin'  // Ensure this runs on a Windows node
+        label 'DevWin'  // Ensures this runs on a Windows node
     }
 
-   stages {
+    stages {
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: 'https://github.com/alisafaa12/my_project.git'
@@ -15,14 +15,8 @@ pipeline {
                 bat '''
                 echo "== Starting Build =="
                 cd "%WORKSPACE%"
-                dir
-                if exist package.json (
-                    echo "package.json found, proceeding with npm install..."
-                    npm install
-                ) else (
-                    echo "Error: package.json not found!"
-                    exit /b 1
-                )
+                mkdir build  // Ensures build folder exists
+                npm install
                 echo "== Build Completed! =="
                 '''
             }
@@ -44,13 +38,14 @@ pipeline {
                 bat '''
                 echo "== Deploying Application =="
                 cd "%WORKSPACE%"
+                
                 if exist build (
-                     echo "Build folder found, proceeding with deployment..."
-                     xcopy /E /I /Y build\\* "C:\\Deployments\\MyApp"
-                     echo "== Deployment Complete! =="
+                    echo "Build folder found, proceeding with deployment..."
+                    xcopy /E /I /Y build\\* "C:\\Deployments\\MyApp"
+                    echo "== Deployment Complete! =="
                 ) else (
-                     echo "Error: Build directory not found!"
-                     exit /b 1
+                    echo "Error: Build directory not found!"
+                    exit /b 1
                 )
                 '''
             }
